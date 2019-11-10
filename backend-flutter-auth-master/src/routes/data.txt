@@ -1,0 +1,52 @@
+// we can access HTTP headers
+//   req.on('data', chunk => {
+//     console.log(`Data chunk available: ${chunk}`)
+//   })
+//   req.on('end', () => {
+//     //end of data
+//   })
+
+
+    // if (req.method === 'POST') {
+    //     let body = '';
+    //     req.on('data', chunk => {
+    //         body += chunk.toString(); 
+    //         // convert Buffer to string
+    //     });
+    //     req.on('end', () => {
+    //         console.log(body + "----------");
+            
+    //         res.end('ok');
+    //     });
+    // }
+
+
+
+
+//--------------THE BEST -------------------
+
+    let body = '';
+ 
+    req.on('error', (err) => {
+        if(err) {
+            response.writeHead(500, {'Content-Type': 'text/html'});
+            response.write('An error occurred');
+            response.end();
+        }
+    });
+    
+    // read chunks of POST data
+    req.on('data', chunk => {
+        body += chunk.toString();
+    });
+
+    // when complete POST data is received
+    req.on('end', () => {
+        // use parse() method
+        body = querystring.parse(body);
+        
+        // { name: 'John', gender: 'MALE', email: 'john@gmail.com' }
+        console.log(body);
+
+        // rest of the code
+    });
